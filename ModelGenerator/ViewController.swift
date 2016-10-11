@@ -78,8 +78,18 @@ private extension ViewController {
             if value is String {
                 value = "\"\""
             }
-            // Array
-            if let array = value as? [[String: Any]] {
+            // TODO: Number(contains bool), NSNull
+            if let number = value as? NSNumber, number.isBool {
+                value = number.boolValue
+            }
+            // Object
+            if let dictValue = value as? [String: Any] {
+                let model = key.capitalized
+                nestedModel += "\n\n// MARK: - \(model)\n\n\(convert(dictValue, to: model))"
+                // Declare an optional object
+                modelDefine += "\(indentation)var \(key): \(model)?\n"
+            } else if let array = value as? [[String: Any]] {
+                // Array
                 var model = key
                 if key.contains(listFlag) {
                     model = key.replacingOccurrences(of: listFlag, with: "")
@@ -92,17 +102,7 @@ private extension ViewController {
                 if !array.isEmpty {
                     nestedModel += "\n\n// MARK: - \(model)\n\n\(convert(array.first, to: model))"
                 }
-            }
-            // TODO: Number(contains bool), NSNull
-            if let number = value as? NSNumber, number.isBool {
-                value = number.boolValue
-            }
-            // Object
-            if let dictValue = value as? [String: Any] {
-                let model = key.capitalized
-                nestedModel += "\n\n// MARK: - \(model)\n\n\(convert(dictValue, to: model))"
-                // Declare an optional object
-                modelDefine += "\(indentation)var \(key): \(model)?\n"
+                modelDefine += "\(indentation)var \(key): [\(model)] = []\n"
             } else {
                 // Declare with initial value
                 modelDefine += "\(indentation)var \(key) = \(value)\n"
@@ -130,4 +130,3 @@ extension ViewController: NSTextFieldDelegate {
         modelName.onNext(model)
     }
 }
-
