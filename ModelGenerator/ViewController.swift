@@ -94,7 +94,9 @@ private extension ViewController {
                 }
             }
             // TODO: Number(contains bool), NSNull
-
+            if let number = value as? NSNumber, number.isBool {
+                value = number.boolValue
+            }
             // Object
             if let dictValue = value as? [String: Any] {
                 let model = key.capitalized
