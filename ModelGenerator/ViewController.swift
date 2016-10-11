@@ -75,11 +75,11 @@ private extension ViewController {
 
             var value = $0.value
             // String
-            if let stringValue = value as? String {
-                value = "\"\(stringValue)\""
+            if value is String {
+                value = "\"\""
             }
             // Array
-            if let arrayValue = value as? [[String: Any]] {
+            if let array = value as? [[String: Any]] {
                 var model = key
                 if key.contains(listFlag) {
                     model = key.replacingOccurrences(of: listFlag, with: "")
@@ -89,11 +89,12 @@ private extension ViewController {
                 }
                 model = model.capitalized
                 value = "[\(model)]()\n"
-                if !arrayValue.isEmpty {
-                    nestedModel += "\n\n// MARK: - \(model)\n\n\(convert(arrayValue.first, to: model))"
+                if !array.isEmpty {
+                    nestedModel += "\n\n// MARK: - \(model)\n\n\(convert(array.first, to: model))"
                 }
             }
             // TODO: Number(contains bool), NSNull
+
             // Object
             if let dictValue = value as? [String: Any] {
                 let model = key.capitalized
