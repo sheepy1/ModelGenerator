@@ -12,6 +12,9 @@ Mac App that help you to convert JSON to Mappable model.
 # 中文介绍和源码解析
 [试水 Mac 开发 —— 代码生成器](http://www.jianshu.com/p/f07560f13515)
 
+# Requirements
+Xcode 8 | macOS 10.11
+
 # License
 ModelGenerator is available under the MIT License.
 
