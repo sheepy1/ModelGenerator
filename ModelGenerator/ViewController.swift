@@ -99,6 +99,9 @@ private extension ViewController {
                 // Declare an array
                 modelDefine += "\(indentation)var \(variableName): [\(model)] = []\n"
 
+            case is NSNull:
+                modelDefine += "\(indentation)var \(variableName): Any?\n"
+
             default:
                 // Declare variable with initial value
                 modelDefine += "\(indentation)var \(variableName) = \(value)\n"
@@ -147,3 +150,4 @@ extension ViewController: NSTextFieldDelegate {
         modelName.onNext(model)
     }
 }
+
