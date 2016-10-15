@@ -42,7 +42,7 @@ private extension ViewController {
     func parse() {
         Observable
             .combineLatest(source, modelName) { (json: $0.0, modelName: $0.1) }
-            .map { (self.json(from: $0.json), $0.modelName) }
+            .map { (self.json(with: $0.json), $0.modelName) }
             .map(convert)
             .subscribe(onNext: {
                 self.resultText.string = $0
@@ -50,7 +50,7 @@ private extension ViewController {
             .addDisposableTo(bag)
     }
 
-    func json(from text: String) -> Any? {
+    func json(with text: String) -> Any? {
         guard let data = text.data(using: .utf8) else { return nil }
         return try? JSONSerialization.jsonObject(with: data, options: [])
     }
