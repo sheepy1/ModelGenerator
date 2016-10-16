@@ -67,7 +67,7 @@ private extension ViewController {
 
         dict.forEach {
             let variableName = normalizeVariableName(key: $0.key)
-            var value = $0.value
+            let value = $0.value
 
             switch value {
             case is String:
@@ -89,22 +89,32 @@ private extension ViewController {
                 // Declare an optional object
                 modelDefine += "\(indentation)var \(variableName): \(model)?\n"
 
-            case let array as [[String: Any]]:
+            case let array as [Any]:
 
-                let model = normalizeArrayElement(variableName: variableName)
-                value = "[\(model)]()\n"
-                if !array.isEmpty {
-                    nestedModel += "\n\n// MARK: - \(model)\n\n\(convert(array.first, to: model))"
+                var type = "Any"
+                if let element = array.first {
+                    switch element {
+                    case is String:
+                        type = "String"
+                    case let number as NSNumber:
+                        if number.isBool {
+                            type = "Bool"
+                        } else {
+                            type = "Int"
+                        }
+                    case let dict as [String: Any]:
+                        type = normalizeArrayElement(variableName: variableName)
+                        nestedModel += "\n\n// MARK: - \(type)\n\n\(convert(dict, to: type))"
+                    default:
+                        break
+                    }
                 }
                 // Declare an array
-                modelDefine += "\(indentation)var \(variableName): [\(model)] = []\n"
-
-            case is NSNull:
-                modelDefine += "\(indentation)var \(variableName): Any?\n"
+                modelDefine += "\(indentation)var \(variableName): [\(type)] = []\n"
 
             default:
-                // Declare variable with initial value
-                modelDefine += "\(indentation)var \(variableName) = \(value)\n"
+                // If value is NSNull or whatever
+                modelDefine += "\(indentation)var \(variableName): Any?\n"
             }
 
             modelExtension += "\(indentation)\(indentation)\(variableName) <- map[\"\($0.key)\"]\n"
