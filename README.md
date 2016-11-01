@@ -1,5 +1,5 @@
 # ModelGenerator
-Mac App that help you to convert JSON to Mappable model.
+Mac App that helps you to convert JSON to Mappable model.
 
 ## Screenshot 
 ![GitHub API](https://github.com/sheepy1/ModelGenerator/raw/master/screenshot.png)
